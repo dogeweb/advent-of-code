@@ -2,8 +2,8 @@ import kotlin.math.abs
 
 fun main() {
     fun part1(input: List<String>): Int {
-        return input.map { it.split("   ")
-            .let { it[0].toInt() to it[1].toInt() } }
+        return input
+            .map { it.split("   ").map { it.toInt() }.let { (a, b) -> a to b } }
             .unzip()
             .let {
                 it.first.sorted()
@@ -13,9 +13,9 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int {
-        val (left, right) = input.map { it.split("   ")
-            .let { it[0].toInt() to it[1].toInt() } }
-            .unzip()
+        val (left, right) =
+            input.map { it.split("   ").map { it.toInt() }.let { (a, b) -> a to b } }
+                .unzip()
 
         val rightMap = right.groupingBy { it }.eachCount()
 

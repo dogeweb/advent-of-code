@@ -2,6 +2,7 @@ import kotlin.math.abs
 import kotlin.time.measureTimedValue
 
 fun main() {
+
     fun part1(input: List<String>): Int {
         return 0
     }

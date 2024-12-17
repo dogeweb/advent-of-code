@@ -1,9 +1,7 @@
 fun main() {
     fun part1(input: List<String>): Int {
         val regex = "mul\\((\\d*),(\\d*)\\)".toRegex()
-        return input.sumOf {
-                regex.findAll(it).map { it.groupValues.let { it[1].toInt() * it[2].toInt() } }.sum()
-            }
+        return input.sumOf { regex.findAll(it).map { it.groupValues.drop(1).map { it.toInt() }.reduce(Int::times) }.sum() }
     }
 
     fun part2(input: List<String>): Int {
