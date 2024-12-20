@@ -6,10 +6,10 @@ fun main() {
 
     fun next(pos: Pair<Int, Int>, char: Char) =
         when (char) {
-            '^' -> 0 to -1
-            '>' -> 1 to 0
-            '<' -> -1 to 0
-            'v' -> 0 to 1
+            '^' ->  0 to -1
+            '>' ->  1 to  0
+            '<' -> -1 to  0
+            'v' ->  0 to  1
             else -> throw Exception("Unexpected character: $char")
         } + pos
 
@@ -25,8 +25,8 @@ fun main() {
     fun next2DBox(pos: Pair<Int, Int>, char: Char) =
         when (char) {
             '^' -> listOf( 0 to -1, -1 to -1, 1 to -1)
-            '>' -> listOf( 2 to 0)
-            '<' -> listOf(-2 to 0)
+            '>' -> listOf( 2 to  0)
+            '<' -> listOf(-2 to  0)
             'v' -> listOf( 0 to  1, 1 to 1, -1 to 1)
             else -> throw Exception("Unexpected character: $char")
         }.map { pos + it }.toSet()

@@ -19,10 +19,12 @@ fun main() {
         (0..<input.size step 4).map { index ->
             "(\\d+)\\D+(\\d+)".toRegex().let { regex ->
                 (0..2)
+                    .asSequence()
                     .map(index::plus)
                     .map(input::get)
-                    .map(regex::findAll)
-                    .map { it.first().groupValues.drop(1).map { it.toLong() }.let { (a, b) -> a to b } }
+                    .mapNotNull(regex::find)
+                    .map { it.groupValues.drop(1).map { it.toLong() }.let { (a, b) -> a to b } }
+                    .toList()
                     .let { (a, b, c) -> Triple(a, b, c.first + offset to c.second + offset) }
             }
         }

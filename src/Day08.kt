@@ -1,14 +1,20 @@
 import kotlin.math.abs
-import kotlin.math.sign
 
 fun main() {
+
     data class Point(val value: Char, val x: Int, val y: Int)
-    fun part1(input: List<String>): Int {
-        val set = mutableSetOf<Pair<Int, Int>>()
-        val points = input.mapIndexed { i, line ->
+
+    fun parseInput(input: List<String>): Map<Char, List<Point>> {
+        return input.mapIndexed { i, line ->
             "[a-zA-Z0-9]".toRegex().findAll(line).flatMap { it.groups }.mapNotNull { it }.map { Point(it.value[0], it.range.first, i) }
         }.flatMap { it }.groupBy { it.value }
-        points.forEach { (k, v) ->
+    }
+
+    tailrec fun gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
+
+    fun part1(input: List<String>): Int {
+        val set = mutableSetOf<Pair<Int, Int>>()
+        parseInput(input).forEach { (_, v) ->
             v.forEachIndexed { index, a ->
                 v.drop(index + 1).forEach { b ->
                     val vect = (b.x - a.x) to (b.y - a.y)
@@ -21,22 +27,11 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int {
-        fun gcd(a: Int, b: Int): Int {
-            var num1 = a
-            var num2 = b
-            while (num2 != 0) {
-                val temp = num2
-                num2 = num1 % num2
-                num1 = temp
-            }
-            return num1
-        }
+
         val bounds = input.indices to input[0].indices
         val set = mutableSetOf<Pair<Int, Int>>()
-        val points = input.mapIndexed { i, line ->
-            "[a-zA-Z0-9]".toRegex().findAll(line).flatMap { it.groups }.mapNotNull { it }.map { Point(it.value[0], it.range.first, i) }
-        }.flatMap { it }.groupBy { it.value }
-        points.forEach { (k, v) ->
+
+        parseInput(input).forEach { (_, v) ->
             if (v.size == 1) return@forEach
             v.forEachIndexed { index, a ->
                 v.drop(index + 1).forEach { b ->

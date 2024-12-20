@@ -4,6 +4,8 @@ import kotlin.time.measureTimedValue
 
 fun main() {
 
+    data class MutablePair(var first: Int, var second: Int)
+
     val timeSource = TimeSource.Monotonic
 
     fun part1(input: List<String>): Long {
@@ -46,8 +48,6 @@ fun main() {
 
         return r
     }
-
-    data class MutablePair(var first: Int, var second: Int)
 
     fun part2(input: List<String>): Long {
 

@@ -19,9 +19,7 @@ fun main() {
 
         val rightMap = right.groupingBy { it }.eachCount()
 
-        return left.sumOf { l ->
-            l * rightMap.getOrDefault(l, 0)
-        }
+        return left.sumOf { l -> l * (rightMap[l] ?: 0) }
     }
 
 //     Test if implementation meets criteria from the description, like:

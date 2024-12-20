@@ -6,8 +6,10 @@ fun main() {
 
     fun parseInput(input: List<String>): List<Robot> {
         val regex = "(\\d+),(\\d+) v=(-*\\d+),(-*\\d+)".toRegex()
-        return input.map {
-            regex.findAll(it).first().groupValues.drop(1).map { it.toInt() }.let { (a, b, c, d) -> Robot(a, b, c, d) }
+        return input
+            .mapNotNull(regex::find)
+            .map { it.groupValues.drop(1).map { it.toInt() }
+                .let { (a, b, c, d) -> Robot(a, b, c, d) }
         }
     }
 

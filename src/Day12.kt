@@ -38,7 +38,7 @@ fun main() {
                     .sumOf {
                         it.first.zip(it.second)
                             .let { if (discount) it.distinctUntilChanged() else it }
-                            .count { it.first xor it.second }
+                            .count { it.first != it.second }
                     }
             } * it.count()
     }

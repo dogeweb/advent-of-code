@@ -34,14 +34,11 @@ fun main() {
             if (num == 9) return 1
             return listOf((x - 1 to y), (x + 1 to y), (x to y + 1), (x to y - 1))
                 .sumOf { (a, b) ->
-                    if (a in bounds.second && b in bounds.first && input[b][a].digitToInt() == num + 1) {
-                        paths(num + 1, a, b)
-                    } else 0
+                    if (a in bounds.second && b in bounds.first && input[b][a].digitToInt() == num + 1)
+                        paths(num + 1, a, b) else 0
                 }
         }
-        return zeros.sumOf {
-            paths(0, it.x, it.y)
-        }
+        return zeros.sumOf { paths(0, it.x, it.y) }
     }
 
 //     Test if implementation meets criteria from the description, like:
