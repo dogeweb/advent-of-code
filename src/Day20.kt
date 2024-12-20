@@ -34,30 +34,7 @@ fun main() {
         return distances
     }
 
-    fun part1(input: List<String>, threshold: Int): Int {
-
-        var start = Pair(0, 0)
-        var end = Pair(0, 0)
-        val bounds = input.lastIndex - 2 to input[0].lastIndex - 2
-
-        val obs = buildSet {
-            input.drop(1).dropLast(1)
-                .forEachIndexed { y, c ->
-                    c.drop(1).dropLast(1).forEachIndexed { x, d ->
-                        when (d) {
-                            '#' -> add(Pair(x, y))
-                            'S' -> start = Pair(x, y)
-                            'E' -> end = Pair(x, y)
-                        }
-                    }
-                }
-        }
-
-        val dist = calculateDistance(obs, start, end, bounds)[end]!!
-        return obs.count { dist - calculateDistance(obs - it, start, end, bounds)[end]!! >= threshold }
-    }
-
-    fun part2(input: List<String>, cheatLength: Int, threshold: Int): Int {
+    fun solve(input: List<String>, cheatLength: Int, threshold: Int): Int {
 
         var start = Pair(0, 0)
         var end = Pair(0, 0)
@@ -80,9 +57,12 @@ fun main() {
         val points = input.indices
             .flatMap { y -> input[y].indices.map { x -> x to y } }
             .filter { it !in walls }
+            .sortedBy { dist[it]!! }
 
-        return points
-            .flatMap { a -> points.map { b -> a to b } }
+        return points.indices
+            .flatMap { a -> points.indices.drop(a).map { b -> a to b } }
+            .asSequence()
+            .map { (a, b) -> points[a] to points[b] }
             .filter { (a, b) -> dist[a]!! < dist[b]!! }
             .filter { (a, b) -> abs(a.first - b.first) + abs(a.second - b.second) <= cheatLength }
             .count { (a, b) -> dist[b]!! - dist[a]!! - abs(a.first - b.first) - abs(a.second - b.second) >= threshold }
@@ -93,13 +73,12 @@ fun main() {
 
     // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day20_test")
-    check(part1(testInput, 1).apply { println() } == 44)
-
-    check(part2(testInput, 20, 50).apply { println() } == 285)
+    check(solve(testInput, 2, 1).apply { println() } == 44)
+    check(solve(testInput, 20, 50).apply { println() } == 285)
 
 
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day20")
-    measureTimedValue { part1(input, 100) }.println()
-    measureTimedValue { part2(input, 20, 100) }.println()
+    measureTimedValue { solve(input, 2, 100) }.println()
+    measureTimedValue { solve(input, 20, 100) }.println()
 }
