@@ -6,13 +6,9 @@ fun main() {
 
     fun generatePrices(seed: Long) =
         generateSequence(seed) {
-            var num = it
-            num = (num * 64) xor num
-            num %= 16777216
-            num = (num / 32) xor num
-            num %= 16777216
-            num = (num * 2048) xor num
-            num %= 16777216
+            var num = (it shl 6 xor it) % 16777216
+            num = (num shr 5 xor num) % 16777216
+            num = (num shl 11 xor num) % 16777216
             num
         }.take(2001)
 
@@ -21,12 +17,10 @@ fun main() {
     fun part2(input: List<String>) = input.map { it.toLong() }
         .flatMap {
             generatePrices(it)
-                .map { it.toString().last().digitToInt() }
-                .windowed(2)
-                .map { it[0] - it[1] to it[1] }
-                .windowed(4)
-                .distinctBy { it.map { it.first } }
-                .map { it.map { it.first } to it[3].second }
+                .map { it.toInt() % 10 }
+                .zipWithNext { a, b -> b - a to b }
+                .windowed(4) { it.map { it.first } to it.last().second }
+                .distinctBy { it.first }
         }
         .groupBy { it.first }
         .maxOf { it.value.sumOf { it.second } }

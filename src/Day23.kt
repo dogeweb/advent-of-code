@@ -1,10 +1,8 @@
-import java.lang.reflect.Array.set
-import java.util.stream.Collectors.toSet
 import kotlin.time.measureTimedValue
 
 fun main() {
 
-    fun part1(input: List<String>): Int {
+    fun parseInput(input: List<String>): MutableMap<String, MutableSet<String>> {
         val map = mutableMapOf<String, MutableSet<String>>()
         input.forEach {
             it.split("-").let { (a, b) ->
@@ -12,49 +10,42 @@ fun main() {
                 map.getOrPut(b) { mutableSetOf() }.add(a)
             }
         }
+        return map
+    }
+
+    fun part1(input: List<String>): Int {
+        val map = parseInput(input)
 
         return buildSet {
             map.forEach {
-                it.value.map { v -> v to map.getValue(v).filter { k -> map.getValue(k).contains(it.key) } }
-                    .forEach { (v, k) ->
-                        k.forEach { kz -> add(setOf(it.key, v, kz)) }
-                    }
+                it.value.map { v -> v to map[v]!!.filter { k -> it.key in map[k]!! } }
+                    .forEach { (v, k) -> k.forEach { kz -> add(setOf(it.key, v, kz)) } }
             }
-        }.filter { it.any { it.startsWith("t") } }.size
+        }.count { it.any { it.startsWith("t") } }
     }
 
 
     fun part2(input: List<String>): String {
-        val map = mutableMapOf<String, MutableSet<String>>().withDefault { mutableSetOf() }
-        input.forEach {
-            it.split("-").let { (a, b) ->
-                map.getOrPut(a) { mutableSetOf() }.apply { add(b) }
-                map.getOrPut(b) { mutableSetOf() }.apply { add(a) }
-            }
-        }
+        val neighbours = parseInput(input)
 
         var largestClique = emptySet<String>()
 
-        fun bronKerbosch(R: Set<String>, P: MutableSet<String>, X: MutableSet<String>) {
+        fun bronKerbosch(R: Set<String>, P: Set<String>, X: Set<String>) {
             if (P.isEmpty() && X.isEmpty()) {
-                if (R.size > largestClique.size) {
-                    largestClique = R
-                }
+                if (R.size > largestClique.size) largestClique = R
                 return
             }
-            val u = (P + X).maxByOrNull { map[it]?.size ?: 0 } ?: return
-            for (v in P - (map[u] ?: emptySet()).toSet()) {
-                bronKerbosch(
-                    R + v,
-                    P.intersect(map.getValue(v)).toMutableSet(),
-                    X.intersect(map.getValue(v)).toMutableSet()
-                )
-                P.remove(v)
-                X.add(v)
+            val u = (P + X).maxByOrNull { neighbours[it]!!.size } ?: return
+            val p = P.toMutableSet()
+            val x = X.toMutableSet()
+            for (v in P - neighbours[u]!!) {
+                neighbours[v]!!.let { bronKerbosch(R + v, p.intersect(it), x.intersect(it)) }
+                p.remove(v)
+                x.add(v)
             }
         }
 
-        bronKerbosch(emptySet(), map.keys.toMutableSet(), mutableSetOf())
+        bronKerbosch(emptySet(), neighbours.keys, emptySet())
 
         return largestClique.sorted().joinToString(",")
     }
