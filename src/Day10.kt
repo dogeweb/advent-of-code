@@ -4,11 +4,16 @@ fun main() {
 
     data class Point(val x: Int, val y: Int)
 
-    fun part1(input: List<String>): Int {
+    fun parseInput(input: List<String>) = run {
         val bounds = input.indices to input[0].indices
         val zeros = input.flatMapIndexed { index, it ->
-            "0".toRegex().findAll(it).flatMap { it.groups }.mapNotNull { it }.map { Point(it.range.first, index) }
+            "0".toRegex().findAll(it).map { Point(it.range.first, index) }
         }
+        bounds to zeros
+    }
+
+    fun part1(input: List<String>): Int {
+        val (bounds, zeros) = parseInput(input)
 
         fun paths(num: Int, x: Int, y: Int): List<Point> {
             if (num == 9) return listOf(Point(x, y))
@@ -19,16 +24,12 @@ fun main() {
                     } else emptyList()
                 }
         }
-        return zeros.sumOf {
-            paths(0, it.x, it.y).distinct().size
-        }
+
+        return zeros.sumOf { paths(0, it.x, it.y).distinct().size }
     }
 
     fun part2(input: List<String>): Int {
-        val bounds = input.indices to input[0].indices
-        val zeros = input.flatMapIndexed { index, it ->
-            "0".toRegex().findAll(it).flatMap { it.groups }.mapNotNull { it }.map { Point(it.range.first, index) }
-        }
+        val (bounds, zeros) = parseInput(input)
 
         fun paths(num: Int, x: Int, y: Int): Int {
             if (num == 9) return 1
@@ -38,6 +39,7 @@ fun main() {
                         paths(num + 1, a, b) else 0
                 }
         }
+
         return zeros.sumOf { paths(0, it.x, it.y) }
     }
 

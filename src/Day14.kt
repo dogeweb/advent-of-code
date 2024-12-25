@@ -1,15 +1,17 @@
+import java.awt.Robot
 import kotlin.time.measureTimedValue
 
 fun main() {
 
     data class Robot(var px: Int, var py: Int, val vx: Int, val vy: Int)
 
-    fun parseInput(input: List<String>): List<Robot> {
-        val regex = "(\\d+),(\\d+) v=(-*\\d+),(-*\\d+)".toRegex()
-        return input
-            .mapNotNull(regex::find)
-            .map { it.groupValues.drop(1).map { it.toInt() }
-                .let { (a, b, c, d) -> Robot(a, b, c, d) }
+    fun parseInput(input: List<String>) =
+        "(\\d+),(\\d+) v=(-*\\d+),(-*\\d+)".toRegex().let { regex ->
+            input
+                .mapNotNull(regex::find)
+                .map { it.groupValues.drop(1).map { it.toInt() }
+                    .let { (a, b, c, d) -> Robot(a, b, c, d) }
+                }
         }
     }
 

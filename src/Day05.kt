@@ -2,7 +2,7 @@ import kotlin.time.measureTimedValue
 
 fun main() {
 
-    fun List<Int>.sort(ordering: Set<Pair<Int, Int>>) = sortedWith { a, b ->
+    fun List<Int>.sortedTopological(ordering: Set<Pair<Int, Int>>) = sortedWith { a, b ->
         when {
             a to b in ordering -> -1
             b to a in ordering -> 1
@@ -15,7 +15,7 @@ fun main() {
         val o = order.map { it.split("|").map(String::toInt) }.map { (a, b) -> a to b }.toSet()
         return updates
             .map { it.split(",").map(String::toInt) }
-            .filter { it == it.sort(o) }
+            .filter { it == it.sortedTopological(o) }
             .sumOf { it[it.size / 2] }
     }
 
@@ -24,7 +24,7 @@ fun main() {
         return updates
             .asSequence()
             .map { it.split(",").map(String::toInt) }
-            .map { it to it.sort(o) }
+            .map { it to it.sortedTopological(o) }
             .filter { (original, sorted) -> original != sorted }
             .sumOf { (_, sorted) -> sorted[sorted.size / 2] }
     }

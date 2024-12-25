@@ -1,5 +1,14 @@
 
 fun main() {
+
+    fun parseInput(input: List<String>) =
+        input.asSequence()
+            .map {
+                val cal = it.substringBefore(":").toLong()
+                val nums = it.substringAfter(":").trim().split(" ").map { it.toLong() }
+                cal to nums
+            }
+
     fun part1(input: List<String>): Long {
         fun resolve(target: Long, list: List<Long>): Boolean {
             if (list.size == 1) {
@@ -8,9 +17,7 @@ fun main() {
             return resolve(target, listOf(list[0] + list[1]) + list.drop(2))
                     || resolve(target, listOf(list[0] * list[1]) + list.drop(2))
         }
-        return input.sumOf {
-            val cal = it.substringBefore(":").toLong()
-            val nums = it.substringAfter(":").trim().split(" ").map { it.toLong() }
+        return parseInput(input).sumOf { (cal, nums) ->
             if(resolve(cal, nums)) cal else 0
         }
     }
@@ -24,9 +31,7 @@ fun main() {
                     || resolve(target, listOf(list[0] * list[1]) + list.drop(2))
                     || resolve(target, listOf("${list[0]}${list[1]}".toLong()) + list.drop(2))
         }
-        return input.sumOf {
-            val cal = it.substringBefore(":").toLong()
-            val nums = it.substringAfter(":").trim().split(" ").map { it.toLong() }
+        return parseInput(input).sumOf { (cal, nums) ->
             if(resolve(cal, nums)) cal else 0
         }
     }

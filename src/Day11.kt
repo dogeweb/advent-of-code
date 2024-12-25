@@ -14,11 +14,18 @@ fun main() {
     fun mapSolution(input: String, times: Int) = run {
         print("map = ")
 
-        generateSequence(input.split(" ").groupingBy { it }.eachCount().mapValues { it.value.toLong() }) {
-            it.flatMap { (n, v) -> next(n).map { it to v } }
-                .groupingBy { it.first }
-                .fold(0) { a, e -> a + e.second }
-        }.elementAt(times).map { (_, v) -> v }.sum()
+        input.split(" ")
+            .groupingBy { it }
+            .eachCount()
+            .mapValues { it.value.toLong() }
+            .let { map ->
+                generateSequence(map) {
+                    it.flatMap { (n, v) -> next(n).map { it to v } }
+                        .groupingBy { it.first }
+                        .fold(0) { a, e -> a + e.second }
+                }.elementAt(times).map { (_, v) -> v }.sum()
+            }
+
     }
 
     fun dfsSolution(input: String, times: Int) = run {

@@ -113,8 +113,8 @@ fun main() {
             input.takeWhile { it.isNotBlank() }.forEachIndexed { y, it ->
                 it.forEachIndexed { x, it ->
                     when (it) {
-                        '#' -> { walls += 2 * x to y }
-                        'O' -> { boxes += 2 * x to y }
+                        '#' -> walls += 2 * x to y
+                        'O' -> boxes += 2 * x to y
                         '@' -> robot = 2 * x to y
                     }
                 }
@@ -123,23 +123,23 @@ fun main() {
 
         input.drop(input.indexOfFirst { it.isBlank() } + 1)
             .joinToString("")
-        .forEach { c ->
-            var n = next2D(robot, c)
-            if (next(robot, c) in walls) return@forEach
-            val obst = mutableSetOf<Pair<Int, Int>>()
-            while (walls.intersect(n).isEmpty()) {
-                val f = boxes.intersect(n)
-                if (f.isEmpty()) break
-                obst.addAll(f)
-                n = f.flatMap { next2DBox(it, c) }.toSet()
-            }
+            .forEach { c ->
+                var n = next2D(robot, c)
+                if (next(robot, c) in walls) return@forEach
+                val obst = mutableSetOf<Pair<Int, Int>>()
+                while (walls.intersect(n).isEmpty()) {
+                    val f = boxes.intersect(n)
+                    if (f.isEmpty()) break
+                    obst.addAll(f)
+                    n = f.flatMap { next2DBox(it, c) }.toSet()
+                }
 
-            if (boxes.intersect(n).isEmpty() && walls.intersect(n).isEmpty()) {
-                boxes.removeAll(obst)
-                boxes.addAll(obst.map { next(it, c) })
-                robot = next(robot, c)
+                if (boxes.intersect(n).isEmpty() && walls.intersect(n).isEmpty()) {
+                    boxes.removeAll(obst)
+                    boxes.addAll(obst.map { next(it, c) })
+                    robot = next(robot, c)
+                }
             }
-        }
 
 //        printAll2D(walls, boxes, robot)
 

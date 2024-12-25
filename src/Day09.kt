@@ -111,8 +111,7 @@ fun main() {
 
         print("part2 ")
         marks
-            .windowed(2)
-            .map { (a, b) -> b - a }
+            .zipWithNext { a, b -> b - a }
             .println()
 
         return r

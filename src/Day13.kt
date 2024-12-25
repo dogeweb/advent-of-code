@@ -16,8 +16,8 @@ fun main() {
         sumOf { findSolution(it.first, it.second, it.third)?.run { first * 3 + second } ?: 0.0 }.toLong()
 
     fun parseInput(input: List<String>, offset: Long = 0L) =
-        (0..<input.size step 4).map { index ->
-            "(\\d+)\\D+(\\d+)".toRegex().let { regex ->
+        "(\\d+)\\D+(\\d+)".toRegex().let { regex ->
+            (0..<input.size step 4).map { index ->
                 (0..2)
                     .asSequence()
                     .map(index::plus)

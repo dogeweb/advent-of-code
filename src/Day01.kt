@@ -1,26 +1,28 @@
 import kotlin.math.abs
+import kotlin.math.absoluteValue
 
 fun main() {
+
+    fun parseInput(input: List<String>) = input
+        .map { it.split("   ").map { it.toInt() }.let { (a, b) -> a to b } }
+        .unzip()
+
     fun part1(input: List<String>): Int {
-        return input
-            .map { it.split("   ").map { it.toInt() }.let { (a, b) -> a to b } }
-            .unzip()
+        return parseInput(input)
             .let {
                 it.first.sorted()
                     .zip(it.second.sorted())
-                    .sumOf { (first, second) -> abs(first - second) }
+                    .sumOf { (first, second) -> (first - second).absoluteValue }
             }
     }
 
-    fun part2(input: List<String>): Int {
-        val (left, right) =
-            input.map { it.split("   ").map { it.toInt() }.let { (a, b) -> a to b } }
-                .unzip()
+    fun part2(input: List<String>) =
+        parseInput(input).let { (left, right) ->
+            right.groupingBy { it }
+                .eachCount()
+                .let { rMap -> left.sumOf { l -> l * (rMap[l] ?: 0) } }
 
-        val rightMap = right.groupingBy { it }.eachCount()
-
-        return left.sumOf { l -> l * (rightMap[l] ?: 0) }
-    }
+        }
 
 //     Test if implementation meets criteria from the description, like:
 //    check(part1(listOf("test_input")) == 1)

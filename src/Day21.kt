@@ -17,10 +17,6 @@ fun main() {
         'A' to (2 to 3),
     )
 
-    fun isValidNumberPadPosition(pos: Pair<Int, Int>): Boolean {
-        return pos != (0 to 3)
-    }
-
     val keyPad = mapOf(
         '^' to (1 to 0),
         'v' to (1 to 1),
@@ -82,28 +78,28 @@ fun main() {
         val map = mutableMapOf<Pair<List<Char>, Int>, Long>()
 
         val rec = DeepRecursiveFunction<Pair<List<Char>, Int>, Long> { (s, i) ->
-            var last = 'A'
-            if (i == robotsCount)
-                s.sumOf {
-                    manhattanDistanceAndPress(keyPad[last]!!, keyPad[it]!!).toLong()
-                        .apply { last = it }
-                }
-            else map.getOrPut(s to i) {
-                 s.sumOf {
-                    keyboardPadPaths(keyPad[last]!!, keyPad[it]!!)
+            map.getOrPut(s to i) {
+                var last = 'A'
+                if (i == robotsCount)
+                    s.sumOf { char ->
+                        manhattanDistanceAndPress(keyPad[last]!!, keyPad[char]!!)
+                            .toLong()
+                            .apply { last = char }
+                    }
+                else s.sumOf { char ->
+                    keyboardPadPaths(keyPad[last]!!, keyPad[char]!!)
                         .minOf { callRecursive(it to i + 1) }
-                        .apply { last = it }
+                        .apply { last = char }
                 }
             }
         }
+
         return input.sumOf {
             var last = 'A'
-            it.sumOf {
-                numberPadPaths(numberPad[last]!!, numberPad[it]!!)
-                    .minOf {
-                        rec(it to 1)
-                    }.apply { last = it }
-
+            it.sumOf { char ->
+                numberPadPaths(numberPad[last]!!, numberPad[char]!!)
+                    .minOf { rec(it to 1) }
+                    .apply { last = char }
             } * it.filter { it.isDigit() }.toLong()
         }
     }

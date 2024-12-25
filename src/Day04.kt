@@ -1,3 +1,6 @@
+import java.util.random.RandomGeneratorFactory.all
+import kotlin.time.measureTimedValue
+
 fun main() {
 
     data class Point(val x: Int, val y: Int)
@@ -13,9 +16,9 @@ fun main() {
         return x.sumOf { xs ->
             combs.count { c ->
                 runCatching {
-                    letters.mapIndexed(::Pair).all { (i, q) ->
-                        input[xs.y + c.first * (i + 1)][xs.x + c.second * (i + 1)] == q
-                    }
+                    letters
+                        .withIndex()
+                        .all { (i, q) -> input[xs.y + c.first * (i + 1)][xs.x + c.second * (i + 1)] == q }
                 }.getOrDefault(false)
             }
         }
@@ -24,24 +27,19 @@ fun main() {
     fun part2(input: List<String>): Int {
         val m = input.flatMapIndexed { index, s ->
             "M".toRegex().findAll(s).flatMap { it.groups }.map { Point(it!!.range.first, index) }
-        }
+        }.toSet()
         val a = input.flatMapIndexed { index, s ->
             "A".toRegex().findAll(s).flatMap { it.groups }.map { Point(it!!.range.first, index) }
-        }
+        }.toSet()
         val s = input.flatMapIndexed { index, s ->
             "S".toRegex().findAll(s).flatMap { it.groups }.map { Point(it!!.range.first, index) }
-        }
+        }.toSet()
 
         return a.count { xs ->
-            ((m.any { ms -> ms.x == xs.x - 1 && ms.y == xs.y - 1 }
-                    && s.any { ms -> ms.x == xs.x + 1 && ms.y == xs.y + 1 })
-                    || (s.any { ms -> ms.x == xs.x - 1 && ms.y == xs.y - 1 }
-                    && m.any { ms -> ms.x == xs.x + 1 && ms.y == xs.y + 1 }))
-                            &&
-                    ((m.any { ms -> ms.x == xs.x + 1 && ms.y == xs.y - 1 }
-                            && s.any { ms -> ms.x == xs.x - 1 && ms.y == xs.y + 1 })
-                            || (s.any { ms -> ms.x == xs.x + 1 && ms.y == xs.y - 1 }
-                            && m.any { ms -> ms.x == xs.x - 1 && ms.y == xs.y + 1 }))
+            ((Point(xs.x - 1, xs.y - 1) in m && Point(xs.x + 1, xs.y + 1) in s)
+                    || (Point(xs.x - 1, xs.y - 1) in s && Point(xs.x + 1, xs.y + 1) in m))
+                    && ((Point(xs.x + 1, xs.y - 1) in m && Point(xs.x - 1, xs.y + 1) in s)
+                    || (Point(xs.x + 1, xs.y - 1) in s && Point(xs.x - 1, xs.y + 1) in m))
         }
     }
 
@@ -50,12 +48,11 @@ fun main() {
 
     // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day04_test")
-    part1(testInput).println()
-    check(part1(testInput) == 18)
-    check(part2(testInput) == 9)
+    check(part1(testInput).apply { println() } == 18)
+    check(part2(testInput).apply { println() } == 9)
 
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day04")
-    part1(input).println()
-    part2(input).println()
+    measureTimedValue { part1(input) }.println()
+    measureTimedValue { part2(input) }.println()
 }

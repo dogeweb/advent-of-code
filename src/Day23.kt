@@ -2,15 +2,13 @@ import kotlin.time.measureTimedValue
 
 fun main() {
 
-    fun parseInput(input: List<String>): MutableMap<String, MutableSet<String>> {
-        val map = mutableMapOf<String, MutableSet<String>>()
-        input.forEach {
-            it.split("-").let { (a, b) ->
-                map.getOrPut(a) { mutableSetOf() }.add(b)
-                map.getOrPut(b) { mutableSetOf() }.add(a)
-            }
+fun parseInput(input: List<String>) = input
+    .map { it.split("-") }
+    .fold(mutableMapOf<String, MutableSet<String>>()) { map, (a, b) ->
+        map.apply {
+            getOrPut(a) { mutableSetOf() }.add(b)
+            getOrPut(b) { mutableSetOf() }.add(a)
         }
-        return map
     }
 
     fun part1(input: List<String>): Int {
@@ -35,7 +33,7 @@ fun main() {
                 if (R.size > largestClique.size) largestClique = R
                 return
             }
-            val u = (P + X).maxByOrNull { neighbours[it]!!.size } ?: return
+            val u = (P + X).maxByOrNull { neighbours[it]!!.count() } ?: return
             val p = P.toMutableSet()
             val x = X.toMutableSet()
             for (v in P - neighbours[u]!!) {
