@@ -1,4 +1,3 @@
-import java.awt.Robot
 import kotlin.time.measureTimedValue
 
 fun main() {
@@ -52,7 +51,7 @@ fun main() {
                 it.px = ((it.px + it.vx) + bounds.first) % bounds.first
                 it.py = ((it.py + it.vy) + bounds.second) % bounds.second
             }
-            if (bots.groupingBy { it.px to it.py }.eachCount().all { it.value == 1 }) {
+            if (bots.distinctBy { it.px to it.py }.count() == bots.count()) {
                 return it + 1
             }
         }
