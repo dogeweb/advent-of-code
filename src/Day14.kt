@@ -13,7 +13,6 @@ fun main() {
                     .let { (a, b, c, d) -> Robot(a, b, c, d) }
                 }
         }
-    }
 
     fun printBots(bots: List<Robot>, bounds: Pair<Int, Int>) {
         (0 ..< bounds.second).forEach { b1 ->
