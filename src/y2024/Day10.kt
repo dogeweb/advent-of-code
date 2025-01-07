@@ -1,3 +1,5 @@
+package y2024
+
 import kotlin.time.measureTimedValue
 
 fun main() {
@@ -47,7 +49,7 @@ fun main() {
 //    check(part1(listOf("test_input")) == 1)
 
     // Or read a large test input from the `src/Day01_test.txt` file:
-//    val testInput = readInput("Day01_test")
+//    val testInput = y2024.readInput("Day01_test")
     val testInput2 = readInput("Day10_test2")
     check(part1(testInput2).apply { println() } == 36)
     check(part2(testInput2).apply { println() } == 81)

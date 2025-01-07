@@ -1,6 +1,6 @@
 package y2023
 
-import println
+import y2024.println
 
 fun main() {
     fun part1(input: List<String>): Int {
@@ -63,7 +63,7 @@ fun main() {
     val testInput = readInput("Day03_test")
 
     check(part1(testInput) == 4361)
-//    part2(testInput).println()
+//    part2(testInput).y2024.println()
     check(part2(testInput) == 467835)
 
 

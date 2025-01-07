@@ -1,3 +1,5 @@
+package y2024
+
 import kotlin.time.measureTimedValue
 
 fun main() {
@@ -43,5 +45,5 @@ fun main() {
     val updates = readInput("Day05_2")
     measureTimedValue { part1(order, updates) }.println()
     measureTimedValue { part2(order, updates) }.println()
-//    part2(input).println()
+//    part2(input).y2024.println()
 }

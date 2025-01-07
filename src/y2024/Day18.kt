@@ -1,4 +1,4 @@
-
+package y2024
 import java.util.*
 import kotlin.time.measureTimedValue
 
@@ -35,7 +35,7 @@ fun main() {
                     in distances -> 'O'
                     else -> '.'
                 }
-            }.joinToString("").println()
+            }.joinToString("").y2024.println()
         }*/
 
         return distances[end]

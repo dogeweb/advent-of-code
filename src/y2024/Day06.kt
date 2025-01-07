@@ -1,3 +1,5 @@
+package y2024
+
 import kotlin.time.measureTimedValue
 
 fun main() {
@@ -33,8 +35,8 @@ fun main() {
             }
         }
 
-//        println(out.joinToString("\n") { it.joinToString("") })
-//        println()
+//        y2024.println(out.joinToString("\n") { it.joinToString("") })
+//        y2024.println()
 
         pos.println()
         return count
@@ -86,7 +88,7 @@ fun main() {
 
     // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day06_test")
-//    part1(testInput).println()
+//    part1(testInput).y2024.println()
     check(part1(testInput).also { println(it) } == 41)
     check(part2(testInput).also { println(it) } == 6)
 

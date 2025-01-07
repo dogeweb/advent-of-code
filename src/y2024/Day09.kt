@@ -1,3 +1,5 @@
+package y2024
+
 import kotlin.time.TimeSource
 import kotlin.time.TimeSource.Monotonic.ValueTimeMark
 import kotlin.time.measureTimedValue

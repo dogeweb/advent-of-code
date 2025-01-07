@@ -1,4 +1,5 @@
-import kotlin.math.abs
+package y2024
+
 import kotlin.math.absoluteValue
 
 fun main() {

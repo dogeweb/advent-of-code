@@ -1,4 +1,5 @@
-import java.util.random.RandomGeneratorFactory.all
+package y2024
+
 import kotlin.time.measureTimedValue
 
 fun main() {

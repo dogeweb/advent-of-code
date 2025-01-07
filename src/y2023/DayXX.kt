@@ -1,4 +1,5 @@
-import kotlin.math.abs
+package y2023
+
 import kotlin.time.measureTimedValue
 
 fun main() {

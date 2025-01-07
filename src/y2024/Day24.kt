@@ -1,11 +1,10 @@
+package y2024
+
 import java.util.LinkedList
-import java.util.PriorityQueue
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.collections.component3
 import kotlin.collections.component4
-import kotlin.collections.forEach
-import kotlin.math.abs
 import kotlin.time.measureTimedValue
 
 fun main() {

@@ -1,4 +1,4 @@
-
+package y2024
 fun main() {
 
     fun parseInput(input: List<String>) =

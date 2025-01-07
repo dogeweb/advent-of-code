@@ -1,4 +1,7 @@
+package y2024
+
 import java.util.*
+import kotlin.invoke
 import kotlin.time.measureTimedValue
 
 fun main() {

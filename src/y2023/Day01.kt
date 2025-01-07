@@ -1,6 +1,6 @@
 package y2023
 
-import println
+import y2024.println
 
 fun main() {
     fun part1(input: List<String>): Int {

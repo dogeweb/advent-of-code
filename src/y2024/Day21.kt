@@ -1,3 +1,6 @@
+package y2024
+
+import kotlin.invoke
 import kotlin.math.absoluteValue
 import kotlin.time.measureTimedValue
 

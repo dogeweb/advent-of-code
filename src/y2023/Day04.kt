@@ -1,6 +1,6 @@
 package y2023
 
-import java.util.ArrayDeque
+import java.util.*
 import kotlin.math.pow
 
 fun main() {
@@ -36,7 +36,7 @@ fun main() {
 
     // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day04_test")
-//    val testInput2 = readInput("Day04_test2")
+//    val testInput2 = y2024.readInput("Day04_test2")
     part1(testInput).println()
     part2(testInput).println()
     check(part1(testInput) == 13)

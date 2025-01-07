@@ -1,5 +1,5 @@
-import java.io.DataInput
-import kotlin.math.abs
+package y2024
+
 import kotlin.time.measureTimedValue
 
 fun main() {

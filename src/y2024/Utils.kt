@@ -1,8 +1,7 @@
+package y2024
+
 import java.math.BigInteger
 import java.security.MessageDigest
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.InvocationKind
-import kotlin.contracts.contract
 import kotlin.io.path.Path
 import kotlin.io.path.readText
 import kotlin.time.TimedValue
@@ -10,10 +9,10 @@ import kotlin.time.TimedValue
 /**
  * Reads lines from the given input txt file.
  */
-fun readInput(name: String) = Path("src/$name.txt").readText().trim().lines()
+fun readInput(name: String) = Path("src/y2024/$name.txt").readText().trim().lines()
 
 /**
- * Converts string to md5 hash.
+ * Converts string to y2024.md5 hash.
  */
 fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray()))
     .toString(16)
