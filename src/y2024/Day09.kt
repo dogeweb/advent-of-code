@@ -1,12 +1,13 @@
 package y2024
 
+import kotlin.math.max
 import kotlin.time.TimeSource
 import kotlin.time.TimeSource.Monotonic.ValueTimeMark
 import kotlin.time.measureTimedValue
 
 fun main() {
 
-    data class MutablePair(var first: Int, var second: Int)
+    data class MutablePair(var first: Int, var second: Int = -1)
 
     val timeSource = TimeSource.Monotonic
 
@@ -44,8 +45,7 @@ fun main() {
 
         print("part1 ")
         marks
-            .windowed(2)
-            .map { (a, b) -> b - a }
+            .zipWithNext { a, b -> b - a }
             .println()
 
         return r
@@ -56,41 +56,38 @@ fun main() {
         val marks = mutableListOf<ValueTimeMark>()
         marks.add(timeSource.markNow())
 
+        var maxBlock = 0
+
         val arr = input.first()
             .chunked(2)
             .flatMapIndexedTo(ArrayList(input.first().length)) { index, s ->
                 if (s.length == 1) listOf(MutablePair(s[0].digitToInt(), index))
-                else listOf(MutablePair(s[0].digitToInt(), index), MutablePair(s[1].digitToInt(), -1))
+                else listOf(
+                    MutablePair(s[0].digitToInt().also { maxBlock = max(maxBlock, it) }, index),
+                    MutablePair(s[1].digitToInt()))
             }
 
         marks.add(timeSource.markNow())
 
         var lastBlockIndex = arr.size
-        val pos = mutableMapOf<Int, Int>()
+        val pos = IntArray(maxBlock + 1) { 0 }
 
         arr
             .asReversed()
             .filter { it.second != -1 }
             .forEach { block ->
-
-                val spaceOffset = pos[block.first] ?: 0
+                val spaceOffset = pos[block.first]
                 if (spaceOffset > lastBlockIndex) return@forEach
 
-                lastBlockIndex = spaceOffset + arr.subList(spaceOffset, lastBlockIndex).lastIndexOf(block)
-                if (spaceOffset > lastBlockIndex) return@forEach
+                lastBlockIndex = spaceOffset + (arr.subList(spaceOffset, lastBlockIndex).lastIndexOf(block)
+                    .takeUnless { it == -1 } ?: return@forEach)
 
                 val firstSpaceIndex = arr.subList(spaceOffset, lastBlockIndex)
                     .indexOfFirst { it.second == -1 && it.first >= block.first }
-                    .takeIf { it >= 0 }
+                    .takeUnless { it == -1 }
                     ?.let { it + spaceOffset }
-                    ?: run { pos[block.first] = Int.MAX_VALUE; return@forEach }
-
-                pos[block.first] = firstSpaceIndex + 1
-
-                if (firstSpaceIndex > lastBlockIndex) {
-                    pos[block.first] = Int.MAX_VALUE
-                    return@forEach
-                }
+                    ?.apply { (block.first..maxBlock).forEach { pos[it] = max(pos[it], this + 1) } }
+                    ?: run { (block.first..maxBlock).forEach { pos[it] = Int.MAX_VALUE }; return@forEach }
 
                 val space = arr[firstSpaceIndex].first
 
@@ -99,24 +96,22 @@ fun main() {
                 arr[lastBlockIndex].second = -1
 
                 if (space > block.first)
-                    arr.add(firstSpaceIndex + 1, MutablePair(space - block.first, -1))
+                    arr.add(firstSpaceIndex + 1, MutablePair(space - block.first))
             }
 
         marks.add(timeSource.markNow())
 
-        val r = arr
+        return arr
             .dropLastWhile { it.second == -1 }
             .flatMap { (a, b) -> List(a) { b.toLong() } }
             .reduceIndexed { index, acc, i -> acc + if (i > 0) (index * i) else 0L }
-
-        marks.add(timeSource.markNow())
-
-        print("part2 ")
-        marks
-            .zipWithNext { a, b -> b - a }
-            .println()
-
-        return r
+            .also {
+                marks.add(timeSource.markNow())
+                print("part2 ")
+                marks
+                    .zipWithNext { a, b -> b - a }
+                    .println()
+            }
     }
 
 //     Test if implementation meets criteria from the description, like:

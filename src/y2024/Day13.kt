@@ -19,7 +19,7 @@ fun main() {
 
     fun parseInput(input: List<String>, offset: Long = 0L) =
         "(\\d+)\\D+(\\d+)".toRegex().let { regex ->
-            (0..<input.size step 4).map { index ->
+            (input.indices step 4).map { index ->
                 (0..2)
                     .asSequence()
                     .map(index::plus)
@@ -35,15 +35,10 @@ fun main() {
 
     fun part2(input: List<String>) = parseInput(input, 1E13.toLong()).solveAll()
 
-//    Test if implementation meets criteria from the description, like:
-//    check(part1(listOf("test_input")) == 1)
-
-    // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day13_test")
     measureTimedValue { part1(testInput).also { it == 480L } }.println()
     measureTimedValue { part2(testInput).also { it == 875318608908 } }.println()
 
-    // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day13")
     measureTimedValue { part1(input).also { check(it == 38839L) } }.println()
     measureTimedValue { part2(input).also { check(it == 75200131617108) } }.println()

@@ -1,13 +1,14 @@
 package y2024
 
-import kotlin.invoke
 import kotlin.time.measureTimedValue
 
 fun main() {
 
+    fun parseInput(input: List<String>) =
+        input.first().split(", ").toSet().let { it to it.maxOf { it.length } }
+
     fun part1(input: List<String>) = run {
-        val towels = input.first().split(", ").toSet()
-        val maxLength = towels.maxOf { it.length }
+        val (towels, maxLength) = parseInput(input)
         val map = mutableMapOf<String, Boolean>()
 
         val rec = DeepRecursiveFunction { s: String ->
@@ -22,13 +23,11 @@ fun main() {
     }
 
     fun part2(input: List<String>) = run {
-        val towels = input.first().split(", ").toSet()
-        val maxLength = towels.maxOf { it.length }
+        val (towels, maxLength) = parseInput(input)
         val map = mutableMapOf<String, Long>()
 
         val rec = DeepRecursiveFunction { s: String ->
-            if(s.isEmpty()) 1L
-            else map.getOrPut(s) {
+            if(s.isEmpty()) 1L else map.getOrPut(s) {
                 (1 .. s.length.coerceAtMost(maxLength))
                     .filter { s.take(it) in towels }
                     .sumOf { callRecursive(s.drop(it)) }

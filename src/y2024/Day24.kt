@@ -1,10 +1,6 @@
 package y2024
 
-import java.util.LinkedList
-import kotlin.collections.component1
-import kotlin.collections.component2
-import kotlin.collections.component3
-import kotlin.collections.component4
+import java.util.*
 import kotlin.time.measureTimedValue
 
 fun main() {
@@ -12,7 +8,7 @@ fun main() {
     fun parseInput(input: List<String>): Pair<Map<String, Int>, List<List<String>>> {
         val regex = "([a-z0-9]{3}) (AND|OR|XOR) ([a-z0-9]{3}) -> ([a-z0-9]{3})".toRegex()
         val map = input
-            .takeWhile { it.isNotBlank() } .associate {
+            .takeWhile { it.isNotBlank() }.associate {
                 it.substringBefore(":") to it.substringAfter(":").trim().toInt()
             }.toMutableMap()
         val queue = input.dropWhile { ":" in it || it.isBlank() }

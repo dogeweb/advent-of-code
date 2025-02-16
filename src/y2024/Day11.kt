@@ -1,6 +1,5 @@
 package y2024
 
-import kotlin.invoke
 import kotlin.time.measureTimedValue
 
 fun main() {
@@ -25,8 +24,8 @@ fun main() {
                 generateSequence(it) {
                     it.flatMap { (n, v) -> next(n).map { it to v } }
                         .groupingBy { it.first }
-                        .fold(0) { a, e -> a + e.second }
-                }.elementAt(times).map { (_, v) -> v }.sum()
+                        .fold(0L) { a, e -> a + e.second }
+                }.elementAt(times).values.sum()
             }
 
     }

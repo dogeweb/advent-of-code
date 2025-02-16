@@ -31,19 +31,13 @@ fun main() {
             .sumOf { (_, sorted) -> sorted[sorted.size / 2] }
     }
 
-//     Test if implementation meets criteria from the description, like:
-//    check(part1(listOf("test_input")) == 1)
-
-    // Or read a large test input from the `src/Day01_test.txt` file:
     val orderInput = readInput("Day05_test1")
     val updatesInput = readInput("Day05_test2")
     check(part1(orderInput, updatesInput) == 143)
     check(part2(orderInput, updatesInput) == 123)
 
-    // Read the input from the `src/Day01.txt` file.
     val order   = readInput("Day05_1")
     val updates = readInput("Day05_2")
     measureTimedValue { part1(order, updates) }.println()
     measureTimedValue { part2(order, updates) }.println()
-//    part2(input).y2024.println()
 }

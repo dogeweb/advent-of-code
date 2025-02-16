@@ -1,4 +1,7 @@
 package y2024
+
+import kotlin.time.measureTimedValue
+
 fun main() {
 
     fun parseInput(input: List<String>) =
@@ -9,43 +12,26 @@ fun main() {
                 cal to nums
             }
 
-    fun part1(input: List<String>): Long {
-        fun resolve(target: Long, list: List<Long>): Boolean {
-            if (list.size == 1) {
-                return list[0] == target
-            }
-            return resolve(target, listOf(list[0] + list[1]) + list.drop(2))
-                    || resolve(target, listOf(list[0] * list[1]) + list.drop(2))
+    fun resolve(target: Long, ops:  List<(Long, Long) -> Long>, list: List<Long>): Boolean {
+        if (list.size == 1) {
+            return list[0] == target
         }
+        return ops.any { resolve(target, ops, listOf(it(list[0], list[1])) + list.drop(2)) }
+    }
+
+    fun solve(input: List<String>, ops: List<(Long, Long) -> Long>): Long {
         return parseInput(input).sumOf { (cal, nums) ->
-            if(resolve(cal, nums)) cal else 0
+            if(resolve(cal, ops, nums)) cal else 0
         }
     }
 
-    fun part2(input: List<String>): Long {
-        fun resolve(target: Long, list: List<Long>): Boolean {
-            if (list.size == 1) {
-                return list[0] == target
-            }
-            return resolve(target, listOf(list[0] + list[1]) + list.drop(2))
-                    || resolve(target, listOf(list[0] * list[1]) + list.drop(2))
-                    || resolve(target, listOf("${list[0]}${list[1]}".toLong()) + list.drop(2))
-        }
-        return parseInput(input).sumOf { (cal, nums) ->
-            if(resolve(cal, nums)) cal else 0
-        }
-    }
+    val ops = listOf<(Long, Long) -> Long>(Long::plus, Long::times, { a, b -> "$a$b".toLong() })
 
-//     Test if implementation meets criteria from the description, like:
-//    check(part1(listOf("test_input")) == 1)
-
-    // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day07_test")
-    check(part1(testInput).also { println(it) } == 3749L)
-    check(part2(testInput).also { println(it) } == 11387L)
+    check(solve(testInput, ops.take(2)).also { println(it) } == 3749L)
+    check(solve(testInput, ops).also { println(it) } == 11387L)
 
-    // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day07")
-    part1(input).println()
-    part2(input).println()
+    measureTimedValue { solve(input, ops.take(2)) }.println()
+    measureTimedValue { solve(input, ops) }.println()
 }

@@ -4,7 +4,10 @@ import kotlin.time.measureTimedValue
 
 fun main() {
 
-    operator fun Pair<Int, Int>.plus(other: Pair<Int, Int>) = this.first + other.first to this.second + other.second
+    operator fun Pair<Int, Int>.plus(other: Pair<Int, Int>) = first + other.first to second + other.second
+    operator fun Pair<Int, Int>.minus(other: Pair<Int, Int>) = first - other.first to second - other.second
+    operator fun Pair<Int, Int>.div(div: Int) = first / div to second / div
+    operator fun Pair<IntRange, IntRange>.contains(pair: Pair<Int, Int>) = pair.first in first && pair.second in second
 
     fun part1(input: List<String>): Int {
         val out = input.map { it.toCharArray() }.toTypedArray()
@@ -15,10 +18,10 @@ fun main() {
         out[pos.first][pos.second] = 'X'
         while (pos.first in bounds.first && pos.second in bounds.second) {
             val next = when (direction % 4) {
-                0 -> pos.first - 1 to pos.second
-                1 -> pos.first to pos.second + 1
-                2 -> pos.first + 1 to pos.second
-                else -> pos.first to pos.second - 1
+                0 -> pos + (-1 to 0)
+                1 -> pos + (0 to 1)
+                2 -> pos + (1 to 0)
+                else -> pos + (0 to -1)
             }
             if (next.first in bounds.first && next.second in bounds.second) {
                 if (input[next.first][next.second] == '#') {
@@ -45,9 +48,9 @@ fun main() {
     fun part2(input: List<String>): Int {
         val bounds = input.indices to input[0].indices
 
-        fun inBound(pos: Pair<Int, Int>) = pos.first in bounds.first && pos.second in bounds.second
-
-        val start = input.mapIndexed { i, j -> i to j.indexOfFirst { it == '^' } }.first { it.second != -1 }
+        val start = input
+            .mapIndexed { i, j -> i to j.indexOfFirst { it == '^' } }
+            .first { it.second != -1 }
             .let { Triple(it.first, it.second, 0) }
 
         fun next(pos: Triple<Int, Int, Int>, obst: Pair<Int, Int>): Triple<Int, Int, Int>? {
@@ -58,7 +61,7 @@ fun main() {
                 else -> 0 to -1
             } + (pos.first to pos.second)
 
-            if (inBound(next)) {
+            if (next in bounds) {
                 return if (next == obst || input[next.first][next.second] == '#')
                     next(Triple(pos.first, pos.second, (pos.third + 1) % 4), obst)
                 else Triple(next.first, next.second, pos.third % 4)

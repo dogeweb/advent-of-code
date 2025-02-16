@@ -14,28 +14,22 @@ fun main() {
 
     fun part1(input: List<String>) = input.sumOf { generatePrices(it.toLong()).last() }
 
-    fun part2(input: List<String>) = input.map { it.toLong() }
+    fun part2(input: List<String>) = input.asSequence()
         .flatMap {
-            generatePrices(it)
+            generatePrices(it.toLong())
                 .map { it.toInt() % 10 }
                 .zipWithNext { a, b -> b - a to b }
                 .windowed(4) { it.map { it.first } to it.last().second }
                 .distinctBy { it.first }
         }
-        .groupBy { it.first }
-        .maxOf { it.value.sumOf { it.second } }
+        .groupBy({ it.first }, { it.second })
+        .maxOf { it.value.sum() }
 
-
-//     Test if implementation meets criteria from the description, like:
-//    check(part1(listOf("test_input")) == 1)
-
-    // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day22_test")
     val testInput2 = readInput("Day22_test2")
     check(part1(testInput).apply { println() } == 37327623L)
     check(part2(testInput2).apply { println() } == 23)
 
-    // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day22")
     measureTimedValue { part1(input) }.println()
     measureTimedValue { part2(input) }.println()

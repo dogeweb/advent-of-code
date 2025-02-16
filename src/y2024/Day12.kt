@@ -1,30 +1,27 @@
 package y2024
 
-import kotlin.invoke
 import kotlin.time.measureTimedValue
 
 fun main() {
 
-    fun findGroups(input: List<String>): List<Set<Pair<Int, Int>>> {
+    fun findGroups(input: List<String>) = run {
         val (vBounds, hBounds) = input.indices to input[0].indices
 
         val visited = mutableSetOf<Pair<Int, Int>>()
 
-        val rec = DeepRecursiveFunction<Pair<Int, Int>, List<Pair<Int, Int>>> {
-            val (x, y) = it
+        val rec = DeepRecursiveFunction<Pair<Int, Int>, List<Pair<Int, Int>>> { (x, y) ->
             val c = input[y][x]
-            listOf(it) + listOf(x + 1 to y, x - 1 to y, x to y + 1, x to y - 1)
+            listOf(x + 1 to y, x - 1 to y, x to y + 1, x to y - 1)
                 .filter { (x1, y1) -> x1 in hBounds && y1 in vBounds && input[y1][x1] == c }
                 .filter(visited::add)
-                .flatMap { callRecursive(it) }
+                .flatMap { callRecursive(it) } + (x to y)
         }
 
-        return input.indices
+        input.indices
             .asSequence()
             .flatMap { i -> input[i].indices.map { it to i } }
             .filter(visited::add)
             .map { rec(it).toSet() }
-            .toList()
     }
 
     fun <T> List<T>.distinctUntilChanged() =
@@ -37,8 +34,7 @@ fun main() {
         listOf((xb.first - 1 .. xb.last + 1).map { x -> yb.map { y -> x to y in it } },
             (yb.first - 1 .. yb.last + 1).map { y -> xb.map { x -> x to y in it } })
             .sumOf {
-                it.zipWithNext()
-                    .sumOf {
+                it.zipWithNext().sumOf {
                         it.first.zip(it.second)
                             .let { if (discount) it.distinctUntilChanged() else it }
                             .count { it.first != it.second }
@@ -50,10 +46,6 @@ fun main() {
 
     fun part2(input: List<String>) = findGroups(input).sumOf { it.fenceCost(true) }
 
-//     Test if implementation meets criteria from the description, like:
-//    check(part1(listOf("test_input")) == 1)
-
-    // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day12_test")
     val testInput2 = readInput("Day12_test2")
     val testInput3 = readInput("Day12_test3")
@@ -67,7 +59,6 @@ fun main() {
     check(part2(testInput4).apply { println() } == 236)
     check(part2(testInput5).apply { println() } == 436)
 
-    // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day12")
     measureTimedValue { part1(input).also { check(it == 1485656) }}.println()
     measureTimedValue { part2(input).also { check(it == 899196) }}.println()

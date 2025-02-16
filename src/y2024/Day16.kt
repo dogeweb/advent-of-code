@@ -1,7 +1,6 @@
 package y2024
 
 import java.util.*
-import kotlin.invoke
 import kotlin.time.measureTimedValue
 
 fun main() {
@@ -11,8 +10,6 @@ fun main() {
     data class IntQuadruple(val x: Int, val y: Int, val direction: Int, val cost: Int) {
         val triple = Triple(x, y, direction)
     }
-
-    fun <A, B, C> Triple<A, B, C>.pair() = first to second
 
     fun findPaths(input: List<String>): Pair<MutableMap<Triple<Int, Int, Int>, Int>, MutableMap<Triple<Int, Int, Int>, Set<Triple<Int, Int, Int>>>> {
 
@@ -46,6 +43,7 @@ fun main() {
                             paths[it.triple] = setOf(Triple(x, y, d))
                             priorityQueue.add(it.copy(cost = totalDist))
                         }
+
                         totalDist == a -> paths[it.triple] = paths.getValue(it.triple) + Triple(x, y, d)
                     }
                 }
@@ -55,34 +53,20 @@ fun main() {
     }
 
     fun part1(input: List<String>) =
-        findPaths(input).first.filter { it.key.first == input[0].length - 2 && it.key.second == 1 }.minOf { it.value }
+        findPaths(input).first.filterKeys { it.first == input[0].length - 2 && it.second == 1 }.minOf { it.value }
 
-    fun part2(input: List<String>): Int {
-
-        val (distances, paths) = findPaths(input)
-
-        val set = mutableSetOf<Pair<Int, Int>>()
-
-        val rec = DeepRecursiveFunction<Triple<Int, Int, Int>, Unit> {
-            set.add(it.pair())
-            paths[it]?.forEach { callRecursive(it) }
+    fun part2(input: List<String>) =
+        findPaths(input).let { (distances, paths) ->
+            distances
+                .filterKeys { it.first == input[0].length - 2 && it.second == 1 }
+                .minBy { it.value }
+                .let { generateSequence(listOf(it.key)) { it.flatMap(paths::getValue) } }
+                .takeWhile { it.isNotEmpty() }
+                .flatten()
+                .distinctBy { it.first to it.second }
+                .count()
         }
 
-        distances
-            .filter { it.key.first == input[0].length - 2 && it.key.second == 1 }
-            .toList()
-            .groupBy { it.second }
-            .minBy { it.key }
-            .value
-            .forEach { rec(it.first) }
-
-        return set.count()
-    }
-
-//     Test if implementation meets criteria from the description, like:
-//    check(part1(listOf("test_input")) == 1)
-
-    // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day16_test")
     check(part1(testInput).apply { println() } == 7036)
     check(part2(testInput).apply { println() } == 45)
@@ -91,7 +75,6 @@ fun main() {
     check(part1(testInput2).apply { println() } == 11048)
     check(part2(testInput2).apply { println() } == 64)
 
-    // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day16")
     measureTimedValue { part1(input) }.println()
     measureTimedValue { part2(input) }.println()

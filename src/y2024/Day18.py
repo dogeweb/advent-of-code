@@ -1,8 +1,6 @@
-import bisect
 import heapq
 
 def parse_input(input):
-    # Assuming the input consists of comma-separated coordinates, like "1,2" per line.
     return [tuple(map(int, line.strip().split(','))) for line in input if line.strip()]
 
 def dist(nodes, end):
@@ -19,7 +17,6 @@ def dist(nodes, end):
         for dx, dy in directions:
             nx, ny = x + dx, y + dy
 
-            # Check if the neighbor is within bounds and not an obstacle
             if 0 <= nx <= end[0] and 0 <= ny <= end[1] and (nx, ny) not in nodes:
                 new_cost = cost + 1
                 if (nx, ny) not in distances or new_cost < distances[(nx, ny)]:
