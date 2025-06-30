@@ -4,11 +4,13 @@ import kotlin.time.measureTimedValue
 
 fun main() {
 
+    fun regex(int: Int) = "^\\.*[#?]{${int}}(?:[.?]|$)".toRegex()
+
     fun solve(input: List<String>, part2: Boolean = false): Long {
 
         val map = mutableMapOf<Pair<String, List<Int>>, Long>()
         val qmRegex = "^\\.*\\?".toRegex()
-        fun regex(int: Int) = "^\\.*[#?]{${int}}(?:[.?]|\$)".toRegex()
+
 
         val rec = DeepRecursiveFunction<Pair<String, List<Int>>, Long> { (s, nums) ->
             map.getOrPut(s to nums) {

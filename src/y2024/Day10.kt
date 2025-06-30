@@ -9,7 +9,7 @@ fun main() {
     fun parseInput(input: List<String>) = run {
         val bounds = input.indices to input[0].indices
         val zeros = input.flatMapIndexed { index, it ->
-            "0".toRegex().findAll(it).map { Point(it.range.first, index) }
+            it.withIndex().filter { it.value == '0' }.map { Point(it.index, index) }
         }
         bounds to zeros
     }
@@ -45,16 +45,10 @@ fun main() {
         return zeros.sumOf { paths(0, it.x, it.y) }
     }
 
-//     Test if implementation meets criteria from the description, like:
-//    check(part1(listOf("test_input")) == 1)
-
-    // Or read a large test input from the `src/Day01_test.txt` file:
-//    val testInput = y2024.readInput("Day01_test")
     val testInput2 = readInput("Day10_test2")
     check(part1(testInput2).apply { println() } == 36)
     check(part2(testInput2).apply { println() } == 81)
 
-    // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day10")
     measureTimedValue { part1(input) }.println()
     measureTimedValue { part2(input) }.println()

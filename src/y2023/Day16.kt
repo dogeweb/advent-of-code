@@ -52,8 +52,8 @@ fun main() {
                 }.let(::listOf)
                 else -> listOf(d)
             }
-                .map { Triple(nx, ny, it) }
-                .let(queue::addAll)
+            .map { Triple(nx, ny, it) }
+            .let(queue::addAll)
         }
 
         return visited.distinctBy { it.first to it.second }.count()

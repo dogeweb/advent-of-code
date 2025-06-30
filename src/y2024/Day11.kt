@@ -17,14 +17,13 @@ fun main() {
         print("map = ")
 
         input.split(" ")
-            .groupingBy { it }
-            .eachCount()
-            .mapValues { it.value.toLong() }
+            .associateWith { 1L }
             .let {
                 generateSequence(it) {
-                    it.flatMap { (n, v) -> next(n).map { it to v } }
+                    it.asSequence()
+                        .flatMap { (n, v) -> next(n).map { it to v } }
                         .groupingBy { it.first }
-                        .fold(0L) { a, e -> a + e.second }
+                        .fold(0) { a, e -> a + e.second }
                 }.elementAt(times).values.sum()
             }
 
@@ -43,18 +42,12 @@ fun main() {
         input.split(" ").sumOf { rec(it to times) }
     }
 
-//     Test if implementation meets criteria from the description, like:
-//    check(part1(listOf("test_input")) == 1)
-
-    // Or read a large test input from the `src/Day01_test.txt` file:
-//    val testInput = y2024.readInput("Day01_test")
     val testInput = readInput("Day11_test").first()
     check(mapSolution(testInput, 6).apply { println() } == 22L)
     check(dfsSolution(testInput, 6).apply { println() } == 22L)
     check(mapSolution(testInput, 25).apply { println() } == 55312L)
     check(dfsSolution(testInput, 25).apply { println() } == 55312L)
-//    check(mapSolution(testInput).apply { y2024.println() } == 0)
-    // Read the input from the `src/Day01.txt` file.
+
     val input = readInput("Day11").first()
     measureTimedValue { mapSolution(input, 25) }.println()
     measureTimedValue { dfsSolution(input, 25) }.println()

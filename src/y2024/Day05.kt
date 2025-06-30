@@ -4,40 +4,27 @@ import kotlin.time.measureTimedValue
 
 fun main() {
 
-    fun List<Int>.sortedTopological(ordering: Set<Pair<Int, Int>>) = sortedWith { a, b ->
-        when {
-            a to b in ordering -> -1
-            b to a in ordering -> 1
-            else -> 0
-        }
+    fun solve(input: List<String>, part2: Boolean = false) = run {
+        val order = input.takeWhile { it.isNotBlank() }
+            .mapTo(mutableSetOf()) { it.substring(0, 2) to it.substring(3, 5) }
+
+        input
+            .subList(order.size + 1, input.size).asSequence()
+            .map { it.split(',') }
+            .map { it to it.sortedWith { a, b -> if (a to b in order) -1 else if (b to a in order) 1 else 0 } }
+            .filter { (original, sorted) -> (original == sorted) != part2 }
+            .sumOf { (_, sorted) -> sorted[sorted.size / 2].toInt() }
     }
 
+    fun part1(input: List<String>) = solve(input)
 
-    fun part1(order: List<String>, updates: List<String>): Int {
-        val o = order.map { it.split("|").map(String::toInt) }.map { (a, b) -> a to b }.toSet()
-        return updates
-            .map { it.split(",").map(String::toInt) }
-            .filter { it == it.sortedTopological(o) }
-            .sumOf { it[it.size / 2] }
-    }
+    fun part2(input: List<String>) = solve(input, true)
 
-    fun part2(order: List<String>, updates: List<String>): Int {
-        val o = order.map { it.split("|").map(String::toInt) }.map { (a, b) -> a to b }.toSet()
-        return updates
-            .asSequence()
-            .map { it.split(",").map(String::toInt) }
-            .map { it to it.sortedTopological(o) }
-            .filter { (original, sorted) -> original != sorted }
-            .sumOf { (_, sorted) -> sorted[sorted.size / 2] }
-    }
+    val testInput = readInput("Day05_test")
+    check(part1(testInput).apply { println() } == 143)
+    check(part2(testInput).apply { println() } == 123)
 
-    val orderInput = readInput("Day05_test1")
-    val updatesInput = readInput("Day05_test2")
-    check(part1(orderInput, updatesInput) == 143)
-    check(part2(orderInput, updatesInput) == 123)
-
-    val order   = readInput("Day05_1")
-    val updates = readInput("Day05_2")
-    measureTimedValue { part1(order, updates) }.println()
-    measureTimedValue { part2(order, updates) }.println()
+    val input = readInput("Day05")
+    measureTimedValue { part1(input) }.println()
+    measureTimedValue { part2(input) }.println()
 }

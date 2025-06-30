@@ -4,20 +4,27 @@ import kotlin.time.measureTimedValue
 
 fun main() {
 
+    fun parseLine(it: String) =
+        it
+        .split(" ")
+        .map(String::toInt).let {
+            generateSequence(it) { it.zipWithNext { a, b -> b - a } }
+        }
+        .takeWhile { it.sum() != 0 }
+
     fun part1(input: List<String>) =
         input.sumOf {
-            generateSequence(it.split(" ").map(String::toInt)) { it.zipWithNext { a, b -> b - a } }
-                    .takeWhile { it.sum() != 0 }
-                    .sumOf { it.last() }
-            }
+            parseLine(it)
+            .sumOf { it.last() }
+        }
 
     fun part2(input: List<String>) =
         input.sumOf {
-                generateSequence(it.split(" ").map(String::toInt)) { it.zipWithNext { a, b -> b - a } }
-                    .takeWhile { it.sum() != 0 }
-                    .mapTo(mutableListOf()) { it.first() }
-                    .reduceRight(Int::minus)
-            }
+            parseLine(it)
+            .map { it.first() }
+            .toList()
+            .reduceRight(Int::minus)
+        }
 
     val testInput = readInput("Day09_test")
     check(part1(testInput).apply { println() } == 114)

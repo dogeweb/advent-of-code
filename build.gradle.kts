@@ -19,6 +19,15 @@ sourceSets {
 
 repositories {
     mavenCentral()
+    maven("https://packages.jetbrains.team/maven/p/kds/kotlin-ds-maven")
+    maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev/")
+    maven("https://repo1.maven.org/maven2")
+    maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
+    maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-ide-plugin-dependencies/")
+    maven("https://oss.sonatype.org/content/repositories/releases/")
+    maven("https://oss.sonatype.org/content/repositories/snapshots/")
+    gradlePluginPortal()
+    google()
 }
 
 

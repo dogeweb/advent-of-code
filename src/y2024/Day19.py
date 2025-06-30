@@ -11,7 +11,7 @@ def parse_input(input):
 
 def solve(input, op):
     input, towels, max_length = parse_input(input)
-    return sum((map(dfs(op, towels, max_length), input[2:])))
+    return sum(map(dfs(op, towels, max_length), input[2:]))
 
 def part1(input):
     return solve(input, any)

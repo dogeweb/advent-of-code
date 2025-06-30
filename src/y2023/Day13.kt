@@ -22,7 +22,7 @@ fun main() {
             .map { it.index + 1 }
             .firstOrNull { index ->
                 val range = max(0, index * 2 - size) until min(size, index * 2)
-                check?.let { it in range } ?: true && slice(range).let { it == it.asReversed() }
+                (check?.let { it in range } ?: true) && slice(range).let { it == it.asReversed() }
             }
 
     fun part1(input: List<String>) =

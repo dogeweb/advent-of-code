@@ -9,14 +9,11 @@ fun main() {
 
     fun part1(input: List<String>) = input.first().split(',').sumOf(::hash)
 
-    val regex = "([a-z]+)([-=])(\\d)?".toRegex()
-
-    fun part2(input: List<String>) = mutableMapOf<Int, MutableList<Pair<String, Int>>>()
-        .also { map ->
-            regex.findAll(input.first())
+    fun part2(input: List<String>) = buildMap<_, MutableList<Pair<String, Int>>>{
+        "([a-z]+)([-=])(\\d)?".toRegex().findAll(input.first())
                 .map(MatchResult::destructured)
                 .forEach { (l, o, f) ->
-                    val list = map.getOrPut(hash(l), ::mutableListOf)
+                    val list = getOrPut(hash(l), ::mutableListOf)
                     val index = list.indexOfFirst { it.first == l }
                     when (o.first()) {
                         '=' -> if (index >= 0) list[index] = l to f.toInt() else list += l to f.toInt()

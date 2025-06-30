@@ -19,21 +19,21 @@ fun main() {
         val distances = mutableMapOf<Quad, Int>().withDefault { Int.MAX_VALUE }
         val target = input[0].lastIndex to input.lastIndex
 
-        while (heap.isNotEmpty()) {
-            val q = heap.poll()
-            if (q.x to q.y == target && (!isPart2 || q.steps > 3)) return q.cost
+        generateSequence(heap::poll).forEach {
+            if (it.x to it.y == target && (!isPart2 || it.steps > 3)) return it.cost
 
             when {
-                isPart2 && q.steps in 0..3 -> listOf(q.direction)
-                q.steps < 3 || (isPart2 && q.steps in 4..9) -> (0..3) - ((q.direction + 2) % 4)
-                else -> (0..3) - ((q.direction + 2) % 4) - q.direction
-            }.forEach { dir ->
+                isPart2 && it.steps in 0..3 -> listOf(it.direction)
+                it.steps < 3 || (isPart2 && it.steps in 4..9) -> (0..3) - ((it.direction + 2) % 4)
+                else -> (0..3) - ((it.direction + 2) % 4) - it.direction
+            }
+            .forEach { dir ->
                 val (dx, dy) = dirs[dir]
-                val nx = q.x + dx
-                val ny = q.y + dy
-                val steps = if (dir == q.direction) q.steps + 1 else 1
+                val nx = it.x + dx
+                val ny = it.y + dy
+                val steps = if (dir == it.direction) it.steps + 1 else 1
                 if (nx in input[0].indices && ny in input.indices) {
-                    val newState = State(nx, ny, dir, steps, q.cost + input[ny][nx].digitToInt())
+                    val newState = State(nx, ny, dir, steps, it.cost + input[ny][nx].digitToInt())
                     val key = Quad(nx, ny, dir, steps)
                     if (newState.cost < distances.getValue(key)) {
                         distances[key] = newState.cost

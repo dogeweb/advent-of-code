@@ -12,31 +12,33 @@ pad = {c: (i % 3, i // 3) for i, c in enumerate("789456123 0A ^K<v>")}
 
 
 @cache
-def paths(s: tuple, e: tuple):
+def paths(se):
+    s, e = se
     if s == e:
         return ["K"]
     result = []
     if s[0] < e[0]:
-        result += map('>'.__add__, paths((s[0] + 1, s[1]), e))
+        result += map('>'.__add__, paths(((s[0] + 1, s[1]), e)))
     elif s[0] > e[0] and s not in [(1, 4), (1, 3)]:
-        result += map('<'.__add__, paths((s[0] - 1, s[1]), e))
+        result += map('<'.__add__, paths(((s[0] - 1, s[1]), e)))
     if s[1] < e[1] and s != (0, 2):
-        result += map('v'.__add__, paths((s[0], s[1] + 1), e))
+        result += map('v'.__add__, paths(((s[0], s[1] + 1), e)))
     elif s[1] > e[1] and s != (0, 5):
-        result += map('^'.__add__, paths((s[0], s[1] - 1), e))
+        result += map('^'.__add__, paths(((s[0], s[1] - 1), e)))
     return result
 
 
-def manhattan_distance_and_press(s, e): return abs(s[0] - e[0]) + abs(s[1] - e[1]) + 1
+def manhattan_distance_and_press(s):
+    return abs(s[0][0] - s[1][0]) + abs(s[0][1] - s[1][1]) + 1
 
 
 def solve(input, robots):
     @cache
     def dfs(s, i = robots):
-        op = manhattan_distance_and_press if i == 1 else lambda a, b: min(dfs(p, i - 1) for p in paths(a, b))
-        return sum(op(a, b) for a, b in pairwise(map(pad.get, f"K{s}")))
+        op = manhattan_distance_and_press if i == 1 else lambda a: min(dfs(p, i - 1) for p in paths(a))
+        return sum(map(op, pairwise(map(pad.get, f"K{s}"))))
 
-    return sum(sum(min(map(dfs, paths(a, b))) for a, b in pairwise(map(pad.get, f"A{it}"))) * int(it[:-1]) for it in input)
+    return sum(sum(min(map(dfs, paths(a))) for a in pairwise(map(pad.get, f"A{it}"))) * int(it[:-1]) for it in input)
 
 
 test_input = read_input("Day21_test.txt")

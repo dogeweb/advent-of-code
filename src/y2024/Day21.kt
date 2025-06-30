@@ -13,13 +13,13 @@ fun main() {
         if(start == end) sequenceOf("K")
         else sequence {
             if (start.first < end.first)
-                paths(start.first + 1 to start.second, end).map { ">$it" }.let { yieldAll(it) }
+                yieldAll(paths(start.first + 1 to start.second, end).map(">"::plus))
             else if (start.first > end.first && start != (1 to 4) && start != (1 to 3))
-                paths(start.first - 1 to start.second, end).map { "<$it" }.let { yieldAll(it) }
+                yieldAll(paths(start.first - 1 to start.second, end).map("<"::plus))
             if (start.second < end.second && start != (0 to 2))
-                paths(start.first to start.second + 1, end).map { "v$it" }.let { yieldAll(it) }
+                yieldAll(paths(start.first to start.second + 1, end).map("v"::plus))
             else if (start.second > end.second && start != (0 to 5))
-                paths(start.first to start.second - 1, end).map { "^$it" }.let { yieldAll(it) }
+                yieldAll(paths(start.first to start.second - 1, end).map("^"::plus))
         }
 
     fun manhattanDistanceAndPress(start: Pair<Int, Int>, end: Pair<Int, Int>) =

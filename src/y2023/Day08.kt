@@ -4,11 +4,10 @@ import kotlin.time.measureTimedValue
 
 fun main() {
 
-    fun solve(seq: String, instr:  Map<String, Pair<String, String>>, start: String): Sequence<Pair<String, Int>> {
-        return generateSequence(start to 0) { (curr, steps) ->
-            instr[curr]!!.let { if (seq[steps % seq.length] == 'L') it.first else it.second } to steps + 1
+    fun solve(seq: String, instr:  Map<String, Pair<String, String>>, start: String) =
+        generateSequence(start to 0) { (curr, steps) ->
+            instr[curr]!!.let { (l, r) -> if (seq[steps % seq.length] == 'L') l else r } to steps + 1
         }
-    }
 
     fun parseInput(input: List<String>) =
         "(\\w+) = \\((\\w+), (\\w+)\\)".toRegex().let { regex ->
